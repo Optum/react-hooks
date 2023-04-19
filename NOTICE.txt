@@ -1,9 +1,10 @@
-<Insert Project Name Here>
+react-hooks
 Copyright 2022 Optum
 
 Project Description:
 ====================
-<Short description of your project>
+A reusable set of React hooks.
 
 Author(s):
-<List the names and GitHub IDs of the original project authors>
+Niels Peschel: NielsJPeschel
+Nicholas Thurow: nthurow
