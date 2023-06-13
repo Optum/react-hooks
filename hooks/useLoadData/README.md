@@ -85,7 +85,7 @@ export const DataComponent: React.FC = () => {
   const cache = useCache();                             // retrieve data from a cache
   const {isError, isInProgress, result} = useLoadData(
     async () => fetch(...),
-    [],                                                 // pass dependnacy array, empty in this example
+    [],                                                 // pass dependancy array, empty in this example
     cache.get('demo-data'),                             // pass cached data as initial data
     (err, res) => cache.set('demo-data', res)           // pass "onDataLoaded" callback to allow caching result or error
   );
