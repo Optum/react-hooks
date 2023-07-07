@@ -42,6 +42,9 @@
   "dependencies": {
     "tslib": "^2.3.1"
   },
+  "resolutions": {
+    "word-wrap": "npm:@aashutoshrathi/word-wrap@1.2.6"
+  },
   "stableVersion": "1.8.0-next.245",
   "packageManager": "yarn@3.5.0"
 }
