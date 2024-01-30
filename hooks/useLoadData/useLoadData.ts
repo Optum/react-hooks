@@ -1,5 +1,7 @@
 import {useEffect, useState, useMemo} from 'react';
-import {ApiResponse, ApiResponseBase, RetryResponse} from '../../types';
+import {ApiResponse, RetryResponse, ApiResponseBase, OptionalDependency, DependencyBase} from '../../types';
+
+import {FetchData, NotUndefined} from './types';
 
 function isApiResponseBase(arg: any): arg is ApiResponseBase<unknown> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -8,9 +10,13 @@ function isApiResponseBase(arg: any): arg is ApiResponseBase<unknown> {
   return keys.includes('isInProgress') && keys.includes('isError') && keys.includes('result') && keys.includes('error');
 }
 
-type UnboxApiResponse<F extends any[]> = {
-  [P in keyof F]: F[P] extends ApiResponseBase<any> ? NonNullable<F[P]['result']> : F[P];
-};
+function isDependencyBase(arg: any): arg is DependencyBase<unknown> {
+  return isApiResponseBase(arg);
+}
+
+function isRetryResponse(arg: any): arg is RetryResponse {
+  return isApiResponseBase(arg) && Object.keys(arg).includes('retry') && Object.keys(arg).includes('isMaxRetry');
+}
 
 function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
   if (isApiResponseBase(arg)) {
@@ -23,14 +29,13 @@ function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
     return arg;
   }
 }
-type FetchData<T, Deps extends any[]> = (...args: readonly [...UnboxApiResponse<Deps>]) => Promise<T>;
 
-interface LoadDataConfig {
+export interface LoadDataConfig {
   fetchWhenDepsChange?: boolean;
   maxRetryCount?: number;
 }
 
-interface NormalizedLoadDataArgs<T, Deps extends any[]> {
+interface NormalizedLoadDataArgs<T extends NotUndefined, Deps extends any[]> {
   config?: LoadDataConfig;
   fetchDataArgs?: readonly [...Deps];
   data?: T;
@@ -44,7 +49,36 @@ function isConfig(arg: any): arg is LoadDataConfig {
   return keys.includes('fetchWhenDepsChange') || keys.includes('maxRetryCount') || keys.includes('data');
 }
 
-function normalizeArgumentOverloads<T, Deps extends any[]>(
+function isOptionalDependency(arg: any): arg is OptionalDependency {
+  return isDependencyBase(arg) && !!arg.optional;
+}
+
+function correctOptionalDependencies<Deps extends any[]>(args?: readonly [...Deps]) {
+  return (args || []).map((arg: unknown) => {
+    if (isOptionalDependency(arg) && arg.isError) {
+      return {
+        isInProgress: false,
+        isError: false,
+        error: undefined,
+        result: null
+      };
+    }
+    return arg;
+  });
+}
+
+function checkArgsAreLoaded<Deps extends any[]>(args?: readonly [...Deps]) {
+  return (args || [])
+    .map((arg: unknown) => {
+      if (isApiResponseBase(arg)) {
+        return !(arg.isInProgress || arg.isError);
+      }
+      return true;
+    })
+    .reduce((prev, curr) => prev && curr, true);
+}
+
+function normalizeArgumentOverloads<T extends NotUndefined, Deps extends any[]>(
   arg2?: unknown,
   arg3?: unknown,
   arg4?: unknown,
@@ -79,32 +113,32 @@ function normalizeArgumentOverloads<T, Deps extends any[]>(
   return args;
 }
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   config?: LoadDataConfig
 ): RetryResponse<T>;
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   fetchDataArgs: readonly [...Deps],
   config?: LoadDataConfig
 ): RetryResponse<T>;
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   fetchDataArgs: readonly [...Deps],
   onComplete: (err: unknown, res?: T) => void,
   config?: LoadDataConfig
 ): RetryResponse<T>;
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   fetchDataArgs: readonly [...Deps],
   data?: T,
   config?: LoadDataConfig
 ): RetryResponse<T>;
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   fetchDataArgs: readonly [...Deps],
   onComplete: (err: unknown, res?: T) => void,
@@ -112,7 +146,7 @@ export function useLoadData<T, Deps extends any[]>(
   config?: LoadDataConfig
 ): RetryResponse<T>;
 
-export function useLoadData<T, Deps extends any[]>(
+export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   fetchData: FetchData<T, Deps>,
   arg2?: unknown,
   arg3?: unknown,
@@ -125,12 +159,25 @@ export function useLoadData<T, Deps extends any[]>(
   const [counter, setCounter] = useState(0);
   const [localFetchWhenDepsChange, setLocalFetchWhenDepsChange] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
+  const initialPromise = useMemo(() => {
+    const correctedArgs = correctOptionalDependencies(fetchDataArgs);
+    if (!data && counter < 1 && checkArgsAreLoaded(correctedArgs)) {
+      return fetchData(...((correctedArgs.map(unboxApiResponse) || []) as Parameters<typeof fetchData>));
+    } else {
+      return undefined;
+    }
+  }, [counter]);
+
+  const nonPromiseResult = initialPromise instanceof Promise ? undefined : initialPromise;
+  const initialData = data || nonPromiseResult;
+
   const [pendingData, setPendingData] = useState<ApiResponse<T>>(
-    data
+    initialData
       ? {
           isInProgress: false,
           isError: false,
-          result: data,
+          result: initialData,
           error: undefined
         }
       : {
@@ -151,6 +198,11 @@ export function useLoadData<T, Deps extends any[]>(
       });
       setCounter((prevCount) => prevCount + 1);
     }
+    fetchDataArgs?.forEach((arg: unknown) => {
+      if (isRetryResponse(arg) && arg.isError && !arg.isMaxRetry) {
+        arg.retry();
+      }
+    });
   }
 
   useEffect(() => {
@@ -168,8 +220,13 @@ export function useLoadData<T, Deps extends any[]>(
         result: undefined
       });
       try {
-        const unboxedArgs = fetchDataArgs?.map(unboxApiResponse);
-        const fetchedData = await fetchData(...((unboxedArgs || []) as Parameters<typeof fetchData>));
+        const correctedArgs = correctOptionalDependencies(fetchDataArgs);
+        const unboxedArgs = correctedArgs.map(unboxApiResponse);
+
+        const fetchedData =
+          initialPromise === undefined
+            ? await fetchData(...((unboxedArgs || []) as Parameters<typeof fetchData>))
+            : await initialPromise;
 
         setPendingData({
           isInProgress: false,
@@ -189,17 +246,10 @@ export function useLoadData<T, Deps extends any[]>(
         onComplete?.(error);
       }
     }
+    const correctedArgs = correctOptionalDependencies(fetchDataArgs);
+    const argsAreLoaded = checkArgsAreLoaded(correctedArgs);
 
-    const argsAreLoaded = (fetchDataArgs || [])
-      .map((arg: unknown) => {
-        if (isApiResponseBase(arg)) {
-          return !(arg.isInProgress || arg.isError);
-        }
-        return true;
-      })
-      .reduce((prev, curr) => prev && curr, true);
-
-    const argsHaveErrors = (fetchDataArgs || [])
+    const argsHaveErrors = (correctedArgs || [])
       .map((arg: unknown) => {
         if (isApiResponseBase(arg)) {
           return arg.isError;
