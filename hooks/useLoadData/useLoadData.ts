@@ -163,29 +163,56 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   const initialPromise = useMemo(() => {
     const correctedArgs = correctOptionalDependencies(fetchDataArgs);
     if (!data && counter < 1 && checkArgsAreLoaded(correctedArgs)) {
-      return fetchData(...((correctedArgs.map(unboxApiResponse) || []) as Parameters<typeof fetchData>));
+      try {
+        return {
+          res: fetchData(...((correctedArgs.map(unboxApiResponse) || []) as Parameters<typeof fetchData>)),
+          error: undefined
+        };
+      } catch (e) {
+        return {
+          res: undefined,
+          error: e
+        };
+      }
     } else {
-      return undefined;
+      return {res: undefined, error: undefined};
     }
   }, [counter]);
 
-  const nonPromiseResult = initialPromise instanceof Promise ? undefined : initialPromise;
+  const nonPromiseResult = initialPromise.res instanceof Promise ? undefined : initialPromise.res;
   const initialData = data || nonPromiseResult;
 
+  // Initialize our pending data to one of three possible states:
+  // 1. If initial data was supplied or if the fetchData function returned a non-Promise value,
+  //    then our initial state will be already "resolved" (not in-progress and not error, we already have the result)
+  // 2. If initial data was not supplied and fetchData returned a Promise, then our initial state is in-progress
+  // 3. If initial data was not supplied and fetchData threw a *synchronous* (non-Promise) exception,
+  //    then our initial state is "rejected" (not in-progress and already has an error value)
+  const initialDataResolved =
+    initialData &&
+    ({
+      isInProgress: false,
+      isError: false,
+      result: initialData,
+      error: undefined
+    } as const);
+  const initialDataRejected =
+    initialPromise.error !== undefined &&
+    ({
+      isInProgress: false,
+      isError: true,
+      result: undefined,
+      error: initialPromise.error
+    } as const);
+  const initialDataPending = {
+    isInProgress: true,
+    isError: false,
+    result: undefined,
+    error: undefined
+  } as const;
+
   const [pendingData, setPendingData] = useState<ApiResponse<T>>(
-    initialData
-      ? {
-          isInProgress: false,
-          isError: false,
-          result: initialData,
-          error: undefined
-        }
-      : {
-          isInProgress: true,
-          isError: false,
-          result: undefined,
-          error: undefined
-        }
+    initialDataResolved || initialDataRejected || initialDataPending
   );
 
   function retry() {
@@ -224,9 +251,9 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
         const unboxedArgs = correctedArgs.map(unboxApiResponse);
 
         const fetchedData =
-          initialPromise === undefined
+          initialPromise.res === undefined
             ? await fetchData(...((unboxedArgs || []) as Parameters<typeof fetchData>))
-            : await initialPromise;
+            : await initialPromise.res;
 
         setPendingData({
           isInProgress: false,
