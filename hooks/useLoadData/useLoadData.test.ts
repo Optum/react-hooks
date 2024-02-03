@@ -370,4 +370,17 @@ describe('useLoadData', () => {
     expect(getFail).toHaveBeenCalledTimes(2);
     expect(mockRetry).toHaveBeenCalledTimes(0);
   });
+
+  it('should set isError to true if the fetch data function throws a non-promise exception', () => {
+    const {result} = renderHook(() => {
+      return useLoadData(() => {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw 'immediate failure';
+      });
+    });
+
+    expect(result.current.isInProgress).toBe(false);
+    expect(result.current.isError).toBe(true);
+    expect(result.current.error).toBe('immediate failure');
+  });
 });
