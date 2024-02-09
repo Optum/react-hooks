@@ -21,5 +21,7 @@ jobs:
         uses: Optum/react-hooks/.github/actions/setup@main
 
       - name: Publish
-        run: echo Publishing...
+        run: |
+          yarn config set npmAuthToken ${{ secrets.NPM_AUTH_TOKEN }} -H
+          yarn npm publish
 
