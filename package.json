@@ -10,13 +10,7 @@
     "prepack": "yarn build"
   },
   "files": [
-    "tsconfig.json",
-    "*.js",
-    "*.js.map",
-    "*.d.ts",
-    "**/*.js",
-    "**/*.js.map",
-    "**/*.d.ts"
+    "build/**"
   ],
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
@@ -41,6 +35,20 @@
   },
   "dependencies": {
     "tslib": "^2.3.1"
+  },
+  "exports": {
+    ".": {
+      "source": {
+        "types": "./index.ts",
+        "default": "./index.ts"
+      },
+      "require": {
+        "types": "./build/types/cjs/index.d.ts",
+        "default": "./build/cjs/index.js"
+      },
+      "types": "./build/types/cjs/index.d.ts",
+      "default": "./build/cjs/index.js"
+    }
   },
   "stableVersion": "1.8.0-next.245",
   "packageManager": "yarn@3.6.1"
