@@ -1,4 +1,4 @@
-import {Promisable} from '../../types';
+import {Promisable} from '../../../types';
 
 import {UnboxApiResponse} from './UnboxApiResponse';
 import {NotUndefined} from './NotUndefined';
