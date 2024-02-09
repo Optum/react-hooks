@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  quality_checks:
+    uses: Optum/react-hooks/.github/workflows/quality-checks.yml@add_quality_checks
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: quality_checks
+    steps:
+      - name: Verify main branch
+        if: github.ref_name != 'main'
+        run: |
+          echo "Invalid branch: can only publish from main"
+          exit 1
+
+      - name: Setup
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+
+      - name: Publish
+        run: echo Publishing...
+

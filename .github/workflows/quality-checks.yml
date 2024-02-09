@@ -1,0 +1,27 @@
+name: Quality Checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+
+      - name: Run TypeScript Build
+        run: yarn build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+
+      - name: Run Unit Tests
+        run: yarn jest
+
+
