@@ -50,6 +50,9 @@
       "default": "./build/cjs/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "stableVersion": "1.8.0-next.245",
   "packageManager": "yarn@3.6.1"
 }
