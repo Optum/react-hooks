@@ -5,7 +5,7 @@ on:
 
 jobs:
   quality_checks:
-    uses: Optum/react-hooks/.github/workflows/quality-checks.yml@add_quality_checks
+    uses: Optum/react-hooks/.github/workflows/quality-checks.yml@main
 
   publish:
     runs-on: ubuntu-latest
@@ -18,7 +18,7 @@ jobs:
           exit 1
 
       - name: Setup
-        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+        uses: Optum/react-hooks/.github/actions/setup@main
 
       - name: Publish
         run: echo Publishing...
