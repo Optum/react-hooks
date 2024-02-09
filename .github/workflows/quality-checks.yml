@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup
-      - uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
 
       - name: Run TypeScript Build
         run: yarn build
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup
-      - uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
 
       - name: Run Unit Tests
         run: yarn jest

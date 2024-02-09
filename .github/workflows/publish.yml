@@ -18,7 +18,7 @@ jobs:
           exit 1
 
       - name: Setup
-      - uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
+        uses: Optum/react-hooks/.github/actions/setup@add_quality_checks
 
       - name: Publish
         run: echo Publishing...
