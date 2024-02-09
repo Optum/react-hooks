@@ -3,7 +3,7 @@
 A React hook that simplifies retrying failed service calls.
 
 ## Usage
-`useRetry` exposes a wrapped version of [useLoadData](../useLoadData/) that retries any and all errored [retry response objects](../../types/RetryResponse), and only those responses created, from that exposed version of _useLoadData_. 
+`useRetry` exposes a wrapped version of [useLoadData](../useLoadData/) that retries any and all errored [retry response objects](../../../types/RetryResponse), and only those responses created, from that exposed version of _useLoadData_. 
 
 
 

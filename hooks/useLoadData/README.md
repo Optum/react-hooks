@@ -7,7 +7,7 @@ A React hook that simplifies complex data loading requirements.
 The most simple usage is to pass a single argument, which should be an asynchronous function. This function will get executed immediately upon component initialization:
 
 ```TypeScript
-import {useLoadData} from 'react-hooks';
+import {useLoadData} from '@optum/react-hooks';
 
 export const DataComponent: React.FC = () => {
   const {isError, isInProgress, result} = useLoadData(async () => fetch(...));

@@ -22,7 +22,7 @@ and our component looks something like this:
 
 ```Typescript
 import React from 'react';
-import {useServiceEffect} from 'react-hooks';
+import {useServiceEffect} from '@optum/react-hooks';
 
 
 export const MyComponent = ({

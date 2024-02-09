@@ -8,7 +8,7 @@ A React hook that simplifies focus management.
 
 ```Typescript
 import React from 'react';
-import {useFocus} from 'react-hooks';
+import {useFocus} from '@optum/react-hooks';
 
 
 export const MyComponent = ({
