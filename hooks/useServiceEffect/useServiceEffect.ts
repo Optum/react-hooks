@@ -1,8 +1,9 @@
 import {useEffect} from 'react';
+import {Promisable} from '../../types';
 
 export function useServiceEffect<T>(
   isPending: boolean,
-  service: () => Promise<T>,
+  service: () => Promisable<T>,
   onServiceCallResolved?: (response: T) => void,
   onServiceCallRejected?: (error: unknown) => void,
   onInitiateServiceCall?: () => void,
