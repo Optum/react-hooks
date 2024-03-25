@@ -1,6 +1,6 @@
 {
   "name": "@optum/react-hooks",
-  "version": "1.0.1-next.0",
+  "version": "1.0.1",
   "description": "A reusable set of React hooks",
   "repository": "https://github.com/Optum/react-hooks",
   "license": "Apache 2.0",
