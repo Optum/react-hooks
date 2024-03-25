@@ -8,7 +8,7 @@ A React hook that allows connecting to several potential active react contexts.
 
 ```Typescript
 import React from 'react';
-import {useCommonContext} from 'react-hooks';
+import {useCommonContext} from '@optum/react-hooks';
 
 import {useContextA} from 'some-context-provider-a';
 import {useContextB} from 'some-context-provider-b';
