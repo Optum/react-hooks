@@ -38,10 +38,6 @@
   },
   "exports": {
     ".": {
-      "source": {
-        "types": "./index.ts",
-        "default": "./index.ts"
-      },
       "require": {
         "types": "./build/types/cjs/index.d.ts",
         "default": "./build/cjs/index.js"
