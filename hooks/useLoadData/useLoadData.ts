@@ -162,7 +162,14 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
   // eslint-disable-next-line @typescript-eslint/promise-function-async
   const initialPromise = useMemo(() => {
     const correctedArgs = correctOptionalDependencies(fetchDataArgs);
-    if (!data && counter < 1 && checkArgsAreLoaded(correctedArgs)) {
+    // initialPromise should NOT be defined in the following scenarios:
+    // 1. data is passed, in which case fetchData should never be invoked
+    // 2. dependencies are not ready initially, so we cannot proceed with calling fetchData
+    // 3. we are attempting to retry calling fetchData, and we do not want initialPromise to interfere
+    //    with re-invoking fetchData
+    // 4. we are attempting to refetch data due to dependencies changing, and we do not want initialPromise
+    //    to interfere with re-invoking fetchData
+    if (!data && counter < 1 && checkArgsAreLoaded(correctedArgs) && !localFetchWhenDepsChange) {
       try {
         return {
           res: fetchData(...((correctedArgs.map(unboxApiResponse) || []) as Parameters<typeof fetchData>)),
@@ -177,7 +184,7 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
     } else {
       return {res: undefined, error: undefined};
     }
-  }, [counter]);
+  }, [counter, localFetchWhenDepsChange]);
 
   const nonPromiseResult = initialPromise.res instanceof Promise ? undefined : initialPromise.res;
   const initialData = data || nonPromiseResult;
