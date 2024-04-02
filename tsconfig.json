@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "module": "Node16",
+    "moduleResolution":"Node16",
     "preserveSymlinks": true,
     "rootDir": ".",
     "outDir": "build/cjs",
     "declaration": true,
     "declarationDir": "build/types/cjs",
-    "target": "es5",
+    "target": "ES6",
     "sourceMap": true,
     "strict": true,
     "noImplicitReturns": true,
@@ -13,7 +15,6 @@
     "noEmitHelpers": true,
     "noUnusedLocals": true,
     "jsx": "preserve",
-    "lib": ["es5", "dom"],
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
