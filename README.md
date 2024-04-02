@@ -76,7 +76,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository contains various reusable hooks built and currently being used throughout [Optum](https://optum.com). They were created with the goal of simplifying otherwise complex react procedures and concepts, such as state management of asynchronous data, accessibility, etc. Please feel free to explore this repository and use, contribute, and add to these hooks!
+This library contains various reusable hooks built and currently being used throughout [Optum](https://optum.com). They were created with the goal of simplifying otherwise complex react procedures and concepts, such as state management of asynchronous data, accessibility, etc. Please feel free to explore this repository and use, contribute, and add to these hooks!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
