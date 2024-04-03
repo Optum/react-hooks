@@ -1,12 +1,14 @@
 {
   "name": "@optum/react-hooks",
-  "version": "1.0.2-next.1",
+  "version": "1.0.2-next.2",
   "description": "A reusable set of React hooks",
   "repository": "https://github.com/Optum/react-hooks",
   "license": "Apache 2.0",
+  "main": "build/lib/es5/index.js",
+  "module": "build/lib/es6/index.js",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "rm -rf build/lib && tsc && tsc --build tsconfig.es5.json",
     "prepack": "yarn build"
   },
   "files": [
@@ -35,19 +37,6 @@
   },
   "dependencies": {
     "tslib": "^2.3.1"
-  },
-  "exports": {
-    ".": {
-      "require": {
-        "types": "./build/types/cjs/index.d.ts",
-        "default": "./build/cjs/index.js"
-      },
-      "types": "./build/types/cjs/index.d.ts",
-      "default": "./build/cjs/index.js"
-    }
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "stableVersion": "1.8.0-next.245",
   "packageManager": "yarn@3.6.1"
