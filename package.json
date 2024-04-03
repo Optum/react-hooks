@@ -1,6 +1,6 @@
 {
   "name": "@optum/react-hooks",
-  "version": "1.0.2-next.1",
+  "version": "1.0.2-next.2",
   "description": "A reusable set of React hooks",
   "repository": "https://github.com/Optum/react-hooks",
   "license": "Apache 2.0",
@@ -12,6 +12,8 @@
   "files": [
     "build/**"
   ],
+  "main": "./build/cjs/index.js",
+  "types": "./build/types/cjs/index.d.ts",
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.10",
