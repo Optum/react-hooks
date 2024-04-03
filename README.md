@@ -76,15 +76,39 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository contains various reusable hooks built and currently being used throughout [Optum](https://optum.com). They were created with the goal of simplifying otherwise complex react procedures and concepts, such as state management of asynchronous data, accessibility, etc. Please feel free to explore this repository and use, contribute, and add to these hooks!
+This library contains various reusable hooks built and currently being used throughout [Optum](https://optum.com). They were created with the goal of simplifying otherwise complex react procedures and concepts, such as state management of asynchronous data, accessibility, etc. Please feel free to explore this repository and use, contribute, and add to these hooks!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
-Currently, `react-hooks` is not published in `npm`. Please see [Test Changes Locally](#test-locally) for a way to run our hooks locally
+Run one of the following commands to add React Hooks to your project: 
+
+**npm**
+```shell
+npm install @optum/react-hooks
+```
+
+or 
+
+
+**yarn**
+```shell
+yarn add @optum/react-hooks
+```
+
 
 ### Prerequisites
+#### Peer dependencies
+Please note that [react](www.npmjs.com/package/react) and [react-dom](www.npmjs.com/package/react-dom) are peer dependencies, and should be installed _before_ installing React Hooks
+
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
+#### Package Manager
 Have desired javascript package mananger installed on your machine:
 
 * [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
@@ -94,25 +118,12 @@ or
 * [npm](https://www.npmjs.com/package/npm)
 
 
-**Optional**
+_**Optional**_
 * [yalc](https://github.com/wclr/yalc) 
   * used for testing package locally
 
-
-### Installation
-Currently, this package is not published and can therefore not be installed by conventional means (_yarn_ or _npm_). Please see next section if you still wish to utilize this pacakge locally 
-<!-- 1. Clone the repo
-   ```sh
-   git clone https://github.com/optum/react-hooks.git
-   ```
-2. Install NPM packages
-   ```sh
-   yarn install
-   ``` -->
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 <div id='test-locally'>
+
 ### Testing Changes Locally
 If you are in the process of making changes to this repo and wish to test them, or simply wish to playground with our hooks:
 
