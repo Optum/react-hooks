@@ -12,6 +12,8 @@
   "files": [
     "build/**"
   ],
+  "main": "./build/cjs/index.js",
+  "types": "./build/types/cjs/index.d.ts",
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.10",
