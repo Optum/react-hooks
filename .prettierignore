@@ -19,6 +19,9 @@ node_modules/
 # misc
 .DS_Store
 
+#Ignore markdown
+**/*.md
+
 # Build Output
 build/
 
