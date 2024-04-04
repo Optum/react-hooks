@@ -385,61 +385,61 @@ describe('useLoadData', () => {
   });
 
   it('should re-invoke fetchData when fetchWhenDepsChange with an initial promise with normal dep', async () => {
-      const {result} = renderHook(() => {
-        const [dep, setDep] = useState<any>('a');
-        const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
-  
-        return {loadedData, setDep};
-      });
-      expect(result.current.loadedData.isInProgress).toBe(true);
-  
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledWith('a');
-      expect(getSuccess).toHaveBeenCalledTimes(1);
-  
-      await act(() => result.current.setDep('b'));
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledTimes(2);
-  
-      expect(getSuccess).toHaveBeenCalledWith('b');
+    const {result} = renderHook(() => {
+      const [dep, setDep] = useState<any>('a');
+      const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
+
+      return {loadedData, setDep};
     });
-  
-    it('should re-invoke fetchData when fetchWhenDepsChange with an initial promise with finished dependency', async () => {
-      const {result} = renderHook(() => {
-        const [dep, setDep] = useState<any>({...successfulResponse, result: 'a'});
-        const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
-  
-        return {loadedData, setDep};
-      });
-      expect(result.current.loadedData.isInProgress).toBe(true);
-  
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledWith('a');
-      expect(getSuccess).toHaveBeenCalledTimes(1);
-  
-      await act(() => result.current.setDep({...successfulResponse, result: 'b'}));
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledTimes(2);
-      expect(getSuccess).toHaveBeenCalledWith('b');
+    expect(result.current.loadedData.isInProgress).toBe(true);
+
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledWith('a');
+    expect(getSuccess).toHaveBeenCalledTimes(1);
+
+    await act(() => result.current.setDep('b'));
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledTimes(2);
+
+    expect(getSuccess).toHaveBeenCalledWith('b');
+  });
+
+  it('should re-invoke fetchData when fetchWhenDepsChange with an initial promise with finished dependency', async () => {
+    const {result} = renderHook(() => {
+      const [dep, setDep] = useState<any>({...successfulResponse, result: 'a'});
+      const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
+
+      return {loadedData, setDep};
     });
-  
-    it('should re-invoke fetchData when fetchWhenDepsChange with an initial promise with pending dependency', async () => {
-      const {result} = renderHook(() => {
-        const [dep, setDep] = useState<any>(pendingResponse);
-        const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
-  
-        return {loadedData, setDep};
-      });
-      expect(result.current.loadedData.isInProgress).toBe(true);
-      await act(() => result.current.setDep({...successfulResponse, result: 'a'}));
-  
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledWith('a');
-      expect(getSuccess).toHaveBeenCalledTimes(1);
-  
-      await act(() => result.current.setDep({...successfulResponse, result: 'b'}));
-      await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
-      expect(getSuccess).toHaveBeenCalledTimes(2);
-      expect(getSuccess).toHaveBeenCalledWith('b');
+    expect(result.current.loadedData.isInProgress).toBe(true);
+
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledWith('a');
+    expect(getSuccess).toHaveBeenCalledTimes(1);
+
+    await act(() => result.current.setDep({...successfulResponse, result: 'b'}));
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledTimes(2);
+    expect(getSuccess).toHaveBeenCalledWith('b');
+  });
+
+  it('should re-invoke fetchData when fetchWhenDepsChange with an initial promise with pending dependency', async () => {
+    const {result} = renderHook(() => {
+      const [dep, setDep] = useState<any>(pendingResponse);
+      const loadedData = useLoadData(getSuccess, [dep], {fetchWhenDepsChange: true});
+
+      return {loadedData, setDep};
     });
+    expect(result.current.loadedData.isInProgress).toBe(true);
+    await act(() => result.current.setDep({...successfulResponse, result: 'a'}));
+
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledWith('a');
+    expect(getSuccess).toHaveBeenCalledTimes(1);
+
+    await act(() => result.current.setDep({...successfulResponse, result: 'b'}));
+    await waitFor(() => expect(result.current.loadedData.isInProgress).toBe(false));
+    expect(getSuccess).toHaveBeenCalledTimes(2);
+    expect(getSuccess).toHaveBeenCalledWith('b');
+  });
 });
