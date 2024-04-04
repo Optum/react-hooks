@@ -7,7 +7,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "prepack": "yarn build"
+    "prepack": "yarn build",
+    "format": "yarn format:nowrite --write",
+    "format:nowrite": "prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|html|css|scss|json)\"",
+    "format:check": "yarn format:nowrite --list-different",
   },
   "files": [
     "build/**"
