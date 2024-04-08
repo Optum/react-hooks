@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "Node16",
-    "moduleResolution":"Node16",
+    "moduleResolution": "Node16",
     "preserveSymlinks": true,
     "rootDir": ".",
     "outDir": "build/cjs",

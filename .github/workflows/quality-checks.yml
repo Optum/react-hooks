@@ -24,4 +24,13 @@ jobs:
       - name: Run Unit Tests
         run: yarn jest
 
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: Optum/react-hooks/.github/actions/setup@main
+
+      - name: Run format checks
+        run: yarn format:check
+
 
