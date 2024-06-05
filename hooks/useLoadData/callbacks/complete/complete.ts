@@ -2,7 +2,7 @@ export function complete<T>(onSuccess?: (data: T) => void, onError?: (error: unk
   return (err?: unknown, res?: T) => {
     if (err) {
       onError?.(err);
-    } else if (res) {
+    } else if (res || res === null) {
       onSuccess?.(res);
     }
   };
