@@ -35,10 +35,7 @@ function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
   native promise (preferred) or whether it has a then method.
 */
 function isPromise<T>(promisable: Promisable<T>): promisable is Promise<T> {
-  return (
-    promisable instanceof Promise ||
-    (promisable && typeof promisable === 'object' && 'then' in promisable && typeof promisable.then === 'function')
-  );
+  return promisable && typeof promisable === 'object' && 'then' in promisable && typeof promisable.then === 'function';
 }
 
 export interface LoadDataConfig {
