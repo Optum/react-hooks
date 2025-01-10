@@ -68,14 +68,12 @@ function correctOptionalDependencies<Deps extends any[]>(args?: readonly [...Dep
 }
 
 function checkArgsAreLoaded<Deps extends any[]>(args?: readonly [...Deps]) {
-  return (args || [])
-    .map((arg: unknown) => {
-      if (isApiResponseBase(arg)) {
-        return !(arg.isInProgress || arg.isError);
-      }
-      return true;
-    })
-    .reduce((prev, curr) => prev && curr, true);
+  return (args || []).every((arg: unknown) => {
+    if (isApiResponseBase(arg)) {
+      return !(arg.isInProgress || arg.isError);
+    }
+    return true;
+  });
 }
 
 function normalizeArgumentOverloads<T extends NotUndefined, Deps extends any[]>(
@@ -283,14 +281,12 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
     const correctedArgs = correctOptionalDependencies(fetchDataArgs);
     const argsAreLoaded = checkArgsAreLoaded(correctedArgs);
 
-    const argsHaveErrors = (correctedArgs || [])
-      .map((arg: unknown) => {
-        if (isApiResponseBase(arg)) {
-          return arg.isError;
-        }
-        return false;
-      })
-      .reduce((prev, curr) => prev || curr, false);
+    const argsHaveErrors = (correctedArgs || []).some((arg: unknown) => {
+      if (isApiResponseBase(arg)) {
+        return arg.isError;
+      }
+      return false;
+    });
 
     if (argsHaveErrors) {
       setPendingData({
