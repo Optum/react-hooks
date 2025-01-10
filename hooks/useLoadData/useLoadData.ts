@@ -30,11 +30,11 @@ function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
   }
 }
 
-/*
-  isPromise determines a promise by checking whether or not it is an instanceof 
-  native promise (preferred) or whether it has a then method.
-*/
 function isPromise<T>(promisable: Promisable<T>): promisable is Promise<T> {
+  /*
+    simply checking promisable instanceof Promise is not sufficient. 
+    Certain environments to not use native promises
+  */
   return promisable && typeof promisable === 'object' && 'then' in promisable && typeof promisable.then === 'function';
 }
 
@@ -194,8 +194,7 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
     }
   }, [counter, localFetchWhenDepsChange]);
 
-  const initialPromiseRes = initialPromise.res;
-  const nonPromiseResult = isPromise(initialPromiseRes) ? undefined : initialPromiseRes;
+  const nonPromiseResult = isPromise(initialPromise.res) ? undefined : initialPromise.res;
   const initialData = data || nonPromiseResult;
 
   // Initialize our pending data to one of three possible states:
