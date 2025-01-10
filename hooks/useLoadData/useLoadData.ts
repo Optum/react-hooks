@@ -32,8 +32,9 @@ function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
 
 function isPromise<T>(promisable: Promisable<T>): promisable is Promise<T> {
   /*
-    simply checking promisable instanceof Promise is not sufficient. 
-    Certain environments to not use native promises
+    Simply checking promisable instanceof Promise is not sufficient. 
+    Certain environments do not use native promises. Checking for promisable
+    to be thenable is a more comprehensive and conclusive test.
   */
   return promisable && typeof promisable === 'object' && 'then' in promisable && typeof promisable.then === 'function';
 }
