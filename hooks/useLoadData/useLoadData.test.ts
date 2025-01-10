@@ -442,4 +442,13 @@ describe('useLoadData', () => {
     expect(getSuccess).toHaveBeenCalledTimes(2);
     expect(getSuccess).toHaveBeenCalledWith('b');
   });
+
+  it('should treat a thenable object as a Promise', async () => {
+    const getThenableSuccess = jest.fn(() => ({then: (resolve: any) => resolve(successResult)}));
+
+    const {result} = renderHook(() => useLoadData(getThenableSuccess));
+    expect(result.current.isInProgress).toBe(true);
+    await waitFor(() => expect(result.current.isInProgress).toBe(false));
+    expect(result.current.result).toBe(successResult);
+  });
 });
