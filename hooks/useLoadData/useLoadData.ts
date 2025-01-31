@@ -1,5 +1,5 @@
 import {useEffect, useState, useMemo} from 'react';
-import {ApiResponse, RetryResponse, ApiResponseBase, OptionalDependency, DependencyBase} from '../../types';
+import {ApiResponse, RetryResponse, ApiResponseBase, OptionalDependency, DependencyBase, Promisable} from '../../types';
 
 import {FetchData, NotUndefined} from './types';
 
@@ -28,6 +28,15 @@ function unboxApiResponse<T>(arg: ApiResponse<T> | T): T {
   } else {
     return arg;
   }
+}
+
+function isPromise<T>(promisable: Promisable<T>): promisable is Promise<T> {
+  /*
+    Simply checking promisable instanceof Promise is not sufficient. 
+    Certain environments do not use native promises. Checking for promisable
+    to be thenable is a more comprehensive and conclusive test.
+  */
+  return promisable && typeof promisable === 'object' && 'then' in promisable && typeof promisable.then === 'function';
 }
 
 export interface LoadDataConfig {
@@ -184,7 +193,7 @@ export function useLoadData<T extends NotUndefined, Deps extends any[]>(
     }
   }, [counter, localFetchWhenDepsChange]);
 
-  const nonPromiseResult = initialPromise.res instanceof Promise ? undefined : initialPromise.res;
+  const nonPromiseResult = isPromise(initialPromise.res) ? undefined : initialPromise.res;
   const initialData = data || nonPromiseResult;
 
   // Initialize our pending data to one of three possible states:
