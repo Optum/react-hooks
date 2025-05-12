@@ -4,3 +4,4 @@ export * from './useFocus';
 export * from './useRetry';
 export * from './useServiceEffect';
 export * from './useOptionalDependency';
+export * from './useLazyLoadData';

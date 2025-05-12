@@ -1,4 +1,4 @@
-import {Promisable} from '@optum/react-hooks';
+import {Promisable} from '../../types';
 import {useRef} from 'react';
 
 type InvokedDeps<T extends any[]> = {
