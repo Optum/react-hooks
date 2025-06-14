@@ -105,7 +105,6 @@ Please note that [react](www.npmjs.com/package/react) and [react-dom](www.npmjs.
 ```json
 "peerDependencies": {
   "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
 },
 ```
 #### Package Manager
