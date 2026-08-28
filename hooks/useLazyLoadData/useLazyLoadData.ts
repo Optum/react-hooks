@@ -123,6 +123,8 @@ export function useLazyLoadData<Args extends any[], T, Deps extends any[]>(
     }
 
     if (disableCache) {
+      delete promiseSingleton.current[key];
+      cache.current[key] = undefined;
       return handleFetchData();
     }
     if (cachedData !== undefined && invokeCallback) {
