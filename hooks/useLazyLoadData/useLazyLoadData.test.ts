@@ -202,4 +202,28 @@ describe('useLazyLoadData', () => {
     lazyFetchData();
     expect(callback).toHaveBeenCalledTimes(2);
   });
+
+  it('should not reuse stale response once new data is requested', async () => {
+    const getSuccess = jest
+      .fn()
+      .mockImplementationOnce(async () => Promise.resolve('1'))
+      .mockImplementationOnce(async () => Promise.resolve('2'));
+
+    const renderedHook = renderHook(() => useLazyLoadData(getSuccess));
+    const lazyFetchData = renderedHook.result.current;
+
+    const res1 = await lazyFetchData();
+    expect(res1).toBe('1');
+    expect(getSuccess).toHaveBeenCalledTimes(1);
+
+    const res2 = lazyFetchData(true);
+    const res3 = lazyFetchData();
+    const res4 = lazyFetchData();
+
+    const [r2, r3, r4] = await Promise.all([res2, res3, res4]);
+    expect(r2).toBe('2');
+    expect(r3).toBe('2');
+    expect(r4).toBe('2');
+    expect(getSuccess).toHaveBeenCalledTimes(2);
+  });
 });
