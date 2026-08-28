@@ -203,7 +203,7 @@ describe('useLazyLoadData', () => {
     expect(callback).toHaveBeenCalledTimes(2);
   });
 
-    it('should not reuse results once new one is requested', async () => {
+    it('should not reuse previous results once new one is requested', async () => {
     const getSuccess = jest
       .fn()
       .mockImplementationOnce(async () => Promise.resolve('1'))
