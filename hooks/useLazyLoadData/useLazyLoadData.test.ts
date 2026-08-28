@@ -203,7 +203,7 @@ describe('useLazyLoadData', () => {
     expect(callback).toHaveBeenCalledTimes(2);
   });
 
-    it('should not reuse previous results once new one is requested', async () => {
+  it('should not reuse stale response once new data is requested', async () => {
     const getSuccess = jest
       .fn()
       .mockImplementationOnce(async () => Promise.resolve('1'))
@@ -217,7 +217,7 @@ describe('useLazyLoadData', () => {
     expect(getSuccess).toHaveBeenCalledTimes(1);
 
     const res2 = lazyFetchData(true);
-    const res3 = lazyFetchData()
+    const res3 = lazyFetchData();
     const res4 = lazyFetchData();
 
     const [r2, r3, r4] = await Promise.all([res2, res3, res4]);
